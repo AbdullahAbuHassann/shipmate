@@ -1,0 +1,122 @@
+name: Claude Code
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issues' &&
+       (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) &&
+       (contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'enhancement'))) ||
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, '@claude') &&
+       github.event.comment.user.type != 'Bot') ||
+      (github.event_name == 'pull_request_review_comment' &&
+       contains(github.event.comment.body, '@claude') &&
+       github.event.comment.user.type != 'Bot')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ─────────────────────────────────────────────────────────────────────
+      # TODO: Add your project's dependency setup here.
+      # This step runs for every trigger, so install only what Claude needs
+      # to read code, run tests, and commit.
+      #
+      # Examples:
+      #
+      # Node.js / npm:
+      #   - uses: actions/setup-node@v4
+      #     with:
+      #       node-version: "20"
+      #   - run: npm ci
+      #
+      # Python / uv:
+      #   - uses: actions/setup-python@v5
+      #     with:
+      #       python-version: "3.12"
+      #   - run: pip install uv && uv sync
+      #
+      # Go:
+      #   - uses: actions/setup-go@v5
+      #     with:
+      #       go-version: "1.22"
+      #
+      # Ruby:
+      #   - uses: ruby/setup-ruby@v1
+      #     with:
+      #       bundler-cache: true
+      # ─────────────────────────────────────────────────────────────────────
+
+      # Install Playwright browsers only when @claude test is triggered
+      - name: Install Playwright browsers
+        if: |
+          github.event_name == 'issue_comment' &&
+          contains(github.event.comment.body, '@claude test')
+        run: npx playwright install --with-deps chromium
+
+      # Only runs for @claude implement — builds a prompt from the plan file only
+      - name: Build implement prompt
+        id: prompt
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude implement')
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 - <<'PYEOF'
+          import os
+
+          issue_num = os.environ['ISSUE_NUMBER']
+          plan_path = f'.agents/plans/issue-{issue_num}.md'
+
+          if os.path.exists(plan_path):
+              with open(plan_path) as f:
+                  plan = f.read()
+              prompt = f'## Plan\n{plan}\n\n## Instruction\nImplement this plan.'
+          else:
+              prompt = f'No plan file found at {plan_path}. Tell the user to run @claude plan first before implementing.'
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('prompt<<PROMPT_EOF\n')
+              f.write(prompt)
+              f.write('\nPROMPT_EOF\n')
+          PYEOF
+
+      # Runs for @claude implement only — context is the plan file, nothing else
+      - name: Run Claude (implement)
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude implement')
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: ${{ steps.prompt.outputs.prompt }}
+          claude_args: >-
+            --model claude-opus-4-6
+            --allowedTools "Bash(git:*)"
+            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest"]}}}'
+
+      # Runs for everything else — clarify, plan, @claude test, PR review comments
+      - name: Run Claude
+        if: "!(github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude implement'))"
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          trigger_phrase: "@claude"
+          claude_args: >-
+            --model claude-opus-4-6
+            --allowedTools "Bash(git:*)"
+            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest"]}}}'

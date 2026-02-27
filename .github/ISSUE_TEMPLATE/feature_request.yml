@@ -1,0 +1,49 @@
+name: Feature Request
+description: Suggest something new or an improvement to how things work
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us what you'd like! You don't need to be technical — just describe what you want and why.
+
+        > **Note**: Submitting this form automatically notifies our AI contributor, which will ask any clarifying questions before building anything.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What's frustrating or missing right now? Why do you need this?
+      placeholder: e.g. Right now I have to manually copy data between two screens. It's tedious and I make mistakes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+      description: Describe the feature or change you'd like to see.
+      placeholder: e.g. A button that automatically syncs the data between the two screens.
+    validations:
+      required: true
+
+  - type: textarea
+    id: success
+    attributes:
+      label: How will you know it's working?
+      description: What would you see or be able to do that confirms this is fixed?
+      placeholder: e.g. I'd click the sync button and both screens would update instantly with no errors.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Screenshots, examples from other tools, additional context — anything helpful.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "@claude"

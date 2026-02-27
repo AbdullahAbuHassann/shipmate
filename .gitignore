@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+dist/
+build/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Ruby
+.bundle/
+vendor/bundle/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# Logs
+*.log
+logs/
+
+# Test output
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Playwright
+playwright-report/
+test-results/
+
+# NOTE: .agents/plans/ and .agents/code-reviews/ are intentionally NOT ignored.
+# Plan files are committed to main so the implement session can read them.

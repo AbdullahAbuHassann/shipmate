@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ─────────────────────────────────────────────────────────────────────
+      # TODO: Add your stack setup here.
+      #
+      # Examples:
+      #   Node.js:   actions/setup-node@v4 + npm ci
+      #   Python:    actions/setup-python@v5 + pip install uv && uv sync
+      #   Go:        actions/setup-go@v5
+      #   Ruby:      ruby/setup-ruby@v1
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Lint
+        run: |
+          # TODO: Replace with your lint command.
+          # Examples:
+          #   npm run lint
+          #   uv run ruff check .
+          #   golangci-lint run
+          #   bundle exec rubocop
+          echo "Add your lint command here"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ─────────────────────────────────────────────────────────────────────
+      # TODO: Add your stack setup here (same as lint job above).
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Unit tests
+        run: |
+          # TODO: Replace with your test command.
+          # Examples:
+          #   npm test
+          #   uv run pytest -m unit --tb=short -q
+          #   go test ./...
+          #   bundle exec rspec --tag unit
+          echo "Add your test command here"
