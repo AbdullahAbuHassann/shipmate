@@ -1,0 +1,155 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f9f9f9;
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 500px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+#todoInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#todoInput:focus {
+  border-color: #888;
+}
+
+#addBtn {
+  padding: 8px 18px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#addBtn:hover {
+  background: #555;
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.8rem;
+  min-height: 18px;
+  margin-bottom: 12px;
+}
+
+ul {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.todo-text {
+  flex: 1;
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.todo-text:hover {
+  color: #555;
+}
+
+li.done .todo-text {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.edit-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: #666;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.edit-btn:hover {
+  border-color: #999;
+  color: #333;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.clear-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  color: #888;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.clear-btn:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 24px 16px;
+  }
+}
