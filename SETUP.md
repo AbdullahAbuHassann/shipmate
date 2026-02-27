@@ -1,10 +1,21 @@
 # Setup Guide
 
-Follow these steps to get `ai-contributor` working in your repository.
+Follow these steps to get shipmate working in your repository.
 
 ---
 
-## Step 1: Create your repository from this template
+## Step 1: Install the Claude GitHub App
+
+1. Go to [github.com/apps/claude](https://github.com/apps/claude)
+2. Click **"Install"**
+3. Select the repository you want to use it on
+4. Confirm the permissions
+
+This is required for the workflow to post comments and open PRs on Claude's behalf.
+
+---
+
+## Step 2: Create your repository from this template
 
 1. Click **"Use this template"** at the top of this repository on GitHub
 2. Choose **"Create a new repository"**
@@ -12,7 +23,7 @@ Follow these steps to get `ai-contributor` working in your repository.
 
 ---
 
-## Step 2: Get your Claude Code OAuth token
+## Step 3: Get your Claude Code OAuth token
 
 1. Go to [claude.ai](https://claude.ai) and sign in (requires Claude Pro or Team)
 2. Open Claude Code in your terminal and run:
@@ -23,7 +34,7 @@ Follow these steps to get `ai-contributor` working in your repository.
 
 ---
 
-## Step 3: Add the secret to GitHub
+## Step 4: Add the secret to GitHub
 
 1. In your new repository, go to **Settings > Secrets and variables > Actions**
 2. Click **"New repository secret"**
@@ -33,31 +44,23 @@ Follow these steps to get `ai-contributor` working in your repository.
 
 ---
 
-## Step 4: Customise `.claude/CLAUDE.md` for your stack
+## Step 5: Customise `.claude/CLAUDE.md` for your stack
 
-This file teaches Claude your project's conventions. Open it and fill in each `[TODO]` section:
+This file teaches Claude your project's conventions. Fill in:
 
 - **Tech Stack** — your languages, frameworks, and key libraries
 - **Project Structure** — directory layout (a tree diagram is ideal)
 - **Commands** — your install, dev, test, and lint commands
-- **Architecture Patterns** — patterns Claude must follow (e.g. repository pattern, error format)
-- **Code Style** — naming conventions, file size limits, type hint requirements
-- **Testing Standards** — test pyramid, fixtures, mock patterns
+- **Architecture Patterns** — patterns Claude must follow
+- **Testing Standards** — test framework, file locations, patterns
 
-The more specific you are, the better Claude's output will be. If Claude writes code that doesn't match your patterns, update this file.
+The more specific you are, the better Claude's output will be.
 
 ---
 
-## Step 5: Add your dependency setup to the workflow
+## Step 6: Add your dependency setup to the workflow
 
-Open `.github/workflows/claude-issues.yml` and find the comment block that starts with:
-
-```yaml
-# ─────────────────────────────────────────────────────────────────────
-# TODO: Add your project's dependency setup here.
-```
-
-Replace the comment examples with your actual setup steps. For example:
+Open `.github/workflows/claude-issues.yml` and find the comment block marked `TODO`. Replace it with your actual setup steps.
 
 **Node.js:**
 ```yaml
@@ -67,7 +70,7 @@ Replace the comment examples with your actual setup steps. For example:
 - run: npm ci
 ```
 
-**Python with uv:**
+**Python:**
 ```yaml
 - uses: actions/setup-python@v5
   with:
@@ -75,64 +78,31 @@ Replace the comment examples with your actual setup steps. For example:
 - run: pip install uv && uv sync
 ```
 
-**Go:**
-```yaml
-- uses: actions/setup-go@v5
-  with:
-    go-version: "1.22"
-```
-
 Do the same for `.github/workflows/ci.yml`.
 
 ---
 
-## Step 6: Set up Railway (optional but recommended)
+## Step 7: Set up Railway
 
-Railway provides automatic preview deployments for every PR, so non-technical users can test features without touching code.
-
-### Create a Railway project
+Railway provides automatic preview deployments for every PR.
 
 1. Go to [railway.app](https://railway.app) and sign in
-2. Click **"New Project"**
-3. Choose **"Deploy from GitHub repo"** and select your repository
-4. Railway will detect your stack and configure the initial deployment
+2. Click **"New Project"** → **"Deploy from GitHub repo"** → select your repo
+3. Railway detects your stack and deploys automatically
+4. Go to your service **Settings** → enable **"PR Deployments"**
 
-### Enable PR environments
-
-1. In your Railway project, go to **Settings**
-2. Find **"PR Deployments"** and enable it
-3. Every PR will now get its own deployed environment
-
-### Connect your services
-
-If you have multiple services (e.g. backend + frontend + database):
-
-1. Add each service to the Railway project
-2. Set environment variables for each service
-3. Railway will replicate the full stack for each PR environment
-
-### Get the preview URL format
-
-Railway posts the preview URL as a PR comment automatically. The format is typically:
-```
-https://your-service-pr-{number}.up.railway.app
-```
-
-Copy this URL and use it with `@claude test <url>` to trigger Playwright verification.
+Every PR now gets its own preview URL. Railway posts it as a comment on the PR automatically. Copy that URL and use it with `@claude test <url>`.
 
 ---
 
-## Step 7: Test it
+## Step 8: Test it
 
-1. Go to the **Issues** tab in your repository
-2. Click **"New issue"**
-3. Choose **"Feature Request"** or **"Bug Report"** from the templates
-4. Fill in the form and submit
+Open a new issue, write what you want in plain English, and include `@claude` anywhere in the body. Claude will respond within a minute or two.
 
-Claude will respond in the issue thread within a minute or two. If it doesn't:
-- Check **Actions** to see if the workflow ran
+If it doesn't respond:
+- Check the **Actions** tab to see if the workflow ran
 - Verify the `CLAUDE_CODE_OAUTH_TOKEN` secret is set correctly
-- Confirm the issue has the `bug` or `enhancement` label (the templates apply these automatically)
+- Confirm the Claude GitHub App is installed on the repo (Step 1)
 
 ---
 
@@ -140,41 +110,21 @@ Claude will respond in the issue thread within a minute or two. If it doesn't:
 
 ### Claude doesn't respond to my issue
 
-- Check that the issue has a `bug` or `enhancement` label
 - Check the Actions tab for workflow run errors
-- Verify the `CLAUDE_CODE_OAUTH_TOKEN` secret is correct and not expired
+- Verify the token is correct and not expired
+- Confirm the Claude GitHub App is installed
 
 ### Claude says "No plan file found"
 
-- The user needs to run `@claude plan` before `@claude implement`
+- Run `@claude plan` before `@claude implement`
 - Check that the plan file was pushed to main (look in `.agents/plans/`)
-- Ensure `[skip ci]` in the plan commit message isn't causing issues
 
 ### The workflow runs but Claude posts nothing
 
-- Check the workflow logs in the Actions tab for the step "Run Claude"
-- Verify your token has the correct permissions
+- Check the workflow logs in Actions for the "Run Claude" step
 - Try re-running the failed workflow job
 
 ### `@claude test` doesn't browse the preview URL
 
-- Confirm the Playwright browser install step ran (it only runs when `@claude test` is in the comment)
-- Verify the URL is publicly accessible
-- Check that the MCP config in the workflow YAML is valid JSON
-
----
-
-## Customising the Issue Templates
-
-The issue templates are in `.github/ISSUE_TEMPLATE/`. They are YAML files that GitHub renders as forms.
-
-To add a new template:
-1. Create a new `.yml` file in that directory
-2. Follow the [GitHub issue template syntax](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema)
-3. Add `@claude` in the body so the workflow triggers automatically
-
-To change which labels trigger Claude, edit the `if:` condition in `.github/workflows/claude-issues.yml`:
-
-```yaml
-(contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'enhancement'))
-```
+- Confirm the Playwright browser install step ran (only runs when comment contains `@claude test`)
+- Verify the Railway URL is publicly accessible

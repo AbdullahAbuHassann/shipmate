@@ -3,7 +3,7 @@
 ## Tech Stack
 
 - Single HTML/CSS/JS frontend (no framework, served by Express)
-- Node.js + Express backend (`server.js`)
+- Node.js + Express backend (`server.js`) — must use `process.env.PORT || 3000`
 - Jest for unit tests
 - No database — in-memory storage only
 
