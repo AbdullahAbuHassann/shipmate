@@ -12,8 +12,7 @@ jobs:
   claude:
     if: |
       (github.event_name == 'issues' &&
-       (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) &&
-       (contains(github.event.issue.labels.*.name, 'bug') || contains(github.event.issue.labels.*.name, 'enhancement'))) ||
+       (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude'))) ||
       (github.event_name == 'issue_comment' &&
        contains(github.event.comment.body, '@claude') &&
        github.event.comment.user.type != 'Bot') ||
@@ -69,7 +68,7 @@ jobs:
         if: |
           github.event_name == 'issue_comment' &&
           contains(github.event.comment.body, '@claude test')
-        run: npx playwright install --with-deps chromium
+        run: npx -y playwright install --with-deps chromium
 
       # Only runs for @claude implement — builds a prompt from the plan file only
       - name: Build implement prompt
@@ -106,7 +105,7 @@ jobs:
           prompt: ${{ steps.prompt.outputs.prompt }}
           claude_args: >-
             --model claude-opus-4-6
-            --allowedTools "Bash(git:*)"
+            --allowedTools "Bash(git:*),Bash(npm:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot"
             --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest"]}}}'
 
       # Runs for everything else — clarify, plan, @claude test, PR review comments
@@ -118,5 +117,5 @@ jobs:
           trigger_phrase: "@claude"
           claude_args: >-
             --model claude-opus-4-6
-            --allowedTools "Bash(git:*)"
+            --allowedTools "Bash(git:*),Bash(npm:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot"
             --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest"]}}}'

@@ -1,145 +1,76 @@
 # Project Conventions
 
-> [TODO: Replace this entire file with your project's conventions. The sections below are a template — fill in each one for your stack. The more specific you are here, the better Claude will follow your patterns.]
+## Tech Stack
 
-## Tech Stack                                             
-  - Single HTML/CSS/JS frontend (no framework)
-  - Node.js + Express backend (server.js)
-  - No database — in-memory storage is fine
-  - Tests: none required for now
+- Single HTML/CSS/JS frontend (no framework, served by Express)
+- Node.js + Express backend (`server.js`)
+- Jest for unit tests
+- No database — in-memory storage only
 
 ## Project Structure
 
-> [TODO: Describe your directory layout. A tree diagram is ideal.]
-
 ```
-your-project/
-├── backend/
-│   └── src/
-├── frontend/
-│   └── src/
-└── ...
+shipmate/
+├── server.js          # Express entry point — serves static files + API routes
+├── public/
+│   ├── index.html     # Frontend
+│   ├── style.css
+│   └── app.js         # Frontend JS
+├── tests/
+│   └── *.test.js      # Jest unit tests
+└── package.json
 ```
 
 ## Commands
 
-  ## Commands
-  npm install
-  npm start        # starts Express on port 3000
-
-> [TODO: Replace with your actual commands]
-
 ```bash
-# Install dependencies
-# [YOUR_INSTALL_COMMAND]   e.g. npm install, uv sync, bundle install
-
-# Run dev server
-# [YOUR_DEV_COMMAND]       e.g. npm run dev, uvicorn main:app --reload
-
-# Run tests
-# [YOUR_TEST_COMMAND]      e.g. npm test, pytest -m unit, go test ./...
-
-# Lint / format
-# [YOUR_LINT_COMMAND]      e.g. npm run lint, ruff check ., golangci-lint run
-
-# Database migrations
-# [YOUR_MIGRATION_COMMAND] e.g. npm run migrate, alembic upgrade head
+npm install       # install dependencies
+npm start         # start Express on port 3000
+npm test          # run Jest unit tests
+npm run lint      # run ESLint
 ```
 
 ## Architecture Patterns
 
-> [TODO: Describe patterns Claude must follow in your codebase]
-
-- e.g. Vertical slice architecture — each feature owns its own models, services, routes, and tests
-- e.g. Repository pattern for data access — never query the database directly in a service
-- e.g. All API responses use a standard envelope: `{ data, error, meta }`
+- All API routes live in `server.js` under `/api/*`
+- In-memory state is a plain JS array/object at the top of `server.js`
+- Frontend fetches from `/api/*` — no page reloads
+- Static files served from `public/`
 
 ## Code Style
 
-> [TODO: Describe your style rules]
-
-### Naming Conventions
-
-- Variables/functions: e.g. `snake_case` (Python) or `camelCase` (JS/TS)
-- Classes: `PascalCase`
-- Constants: `UPPER_SNAKE_CASE`
-- Files: e.g. `kebab-case.ts` or `snake_case.py`
-
-### File and Function Limits
-
-- Files: Max 500 lines — split into modules if approaching this
-- Functions: Max 50 lines — single clear responsibility
-- Line length: e.g. 100 characters
-
-### Python (if applicable)
-
-- PEP 8 with your chosen line length (ruff-enforced)
-- Type hints on all function signatures
-- Google-style docstrings on all public functions
-- Pydantic v2 for data validation
-
-### TypeScript (if applicable)
-
-- Strict mode enabled
-- No `any` types — use `unknown` and narrow
-- Prefer `interface` over `type` for object shapes
-- Named exports over default exports
+- `camelCase` for variables and functions
+- `PascalCase` for classes
+- Single quotes for strings
+- No semicolons
+- 2-space indentation
 
 ## Testing Standards
 
-> [TODO: Describe your testing approach]
+- Test framework: Jest
+- Test files live in `tests/`, named `*.test.js`
+- Unit test the API route logic and any pure functions
+- Each test file covers one module or route group
 
-### Test Pyramid
+### Test pattern
 
-- 70% Unit tests: pure functions, business logic, validators
-- 20% Integration tests: API endpoints, database interactions
-- 10% E2E tests: critical user journeys
+```js
+const request = require('supertest')
+const app = require('../server')
 
-### Test Patterns
-
-> [TODO: Show examples of your test patterns — fixture setup, mocking, assertions]
-
-```python
-# Example: pytest async test pattern
-@pytest.mark.asyncio
-async def test_create_item(db_session, mock_service):
-    result = await service.create(db_session, CreateItemRequest(...))
-    assert result.id is not None
-```
-
-## Database Conventions (if applicable)
-
-> [TODO: Describe your database naming and query patterns]
-
-```sql
--- Primary keys: {entity}_id
--- Foreign keys: {referenced_entity}_id
--- Timestamps: {action}_at (always TIMESTAMPTZ)
--- Booleans: is_{state}
+test('POST /api/todos adds a todo', async () => {
+  const res = await request(app)
+    .post('/api/todos')
+    .send({ text: 'Buy groceries' })
+  expect(res.status).toBe(201)
+  expect(res.body.text).toBe('Buy groceries')
+})
 ```
 
 ## Error Handling
 
-> [TODO: Describe how errors are handled in your codebase]
-
-- Custom exception hierarchy or standard HTTP errors?
-- Error response format: e.g. `{ error: "not_found", message: "..." }`
-- Where errors are caught: middleware, service layer, or route handlers?
-
-## Logging
-
-> [TODO: Describe your logging setup]
-
-- Library: e.g. structlog, winston, zap
-- Level conventions: INFO for normal ops, WARNING for recoverable errors, ERROR for failures
-- Always include request ID and user ID in log context
-
-## Configuration
-
-> [TODO: Describe how config/secrets are managed]
-
-- Environment variables via `.env` (never commit secrets)
-- Config validation at startup (Pydantic Settings, Zod, etc.)
+- API errors return `{ error: "message" }` with appropriate HTTP status
+- Frontend shows errors inline, never as alerts
 
 ## Git Workflow
 
@@ -161,10 +92,6 @@ Never include "claude code" or "written by claude" in commit messages.
 
 ## Important Rules
 
-> [TODO: Add any project-specific rules Claude must always follow]
-
-- Never assume or guess — when in doubt, ask for clarification
-- Always verify file paths and module names before use
-- No feature is complete without tests
-- [YOUR_RULE_3]
-- [YOUR_RULE_4]
+- No feature is complete without at least one Jest unit test
+- Never query state directly from a route handler — extract logic into a function that can be tested
+- Keep `server.js` under 200 lines — split into separate route files if needed
