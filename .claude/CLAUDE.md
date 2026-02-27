@@ -2,16 +2,11 @@
 
 > [TODO: Replace this entire file with your project's conventions. The sections below are a template — fill in each one for your stack. The more specific you are here, the better Claude will follow your patterns.]
 
-## Tech Stack
-
-> [TODO: List your actual stack here]
-
-- **Backend**: e.g. Python 3.12+, FastAPI, SQLAlchemy — or Node.js, Express, Prisma
-- **Frontend**: e.g. React 18, Vite, Tailwind CSS — or Vue, Next.js, etc.
-- **Database**: e.g. PostgreSQL 16, Redis — or MySQL, MongoDB, etc.
-- **Auth**: e.g. Clerk, Auth0, NextAuth — or your own JWT implementation
-- **Infrastructure**: e.g. Railway, Vercel, AWS — include local dev setup
-- **Testing**: e.g. pytest + pytest-asyncio, Jest + Testing Library, Vitest
+## Tech Stack                                             
+  - Single HTML/CSS/JS frontend (no framework)
+  - Node.js + Express backend (server.js)
+  - No database — in-memory storage is fine
+  - Tests: none required for now
 
 ## Project Structure
 
@@ -27,6 +22,10 @@ your-project/
 ```
 
 ## Commands
+
+  ## Commands
+  npm install
+  npm start        # starts Express on port 3000
 
 > [TODO: Replace with your actual commands]
 
