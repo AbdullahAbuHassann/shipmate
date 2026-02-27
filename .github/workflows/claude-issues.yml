@@ -166,4 +166,4 @@ jobs:
           show_full_output: "true"
           claude_args: >-
             --model claude-sonnet-4-6
-            --allowedTools "WebFetch,Bash(git:*),Bash(npm:*),Bash(gh:*),mcp__playwright__*"
+            --allowedTools "WebFetch,Bash(git:*),Bash(npm:*),Bash(gh:*),mcp__playwright__browser_navigate,mcp__playwright__browser_take_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_fill,mcp__playwright__browser_snapshot,mcp__playwright__browser_console_messages,mcp__playwright__browser_wait_for,mcp__playwright__browser_handle_dialog"
