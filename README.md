@@ -1,8 +1,8 @@
-# ai-contributor
+# shipmate
 
 **Your non-technical team ships code. You review and merge.**
 
-A GitHub Actions workflow that turns plain-English GitHub issues into pull requests — with clarification, planning, implementation, and live preview testing handled by Claude.
+A GitHub Actions workflow that turns plain-English GitHub issues into pull requests with clarification, planning, implementation, and live preview testing handled by Claude.
 
 ---
 
