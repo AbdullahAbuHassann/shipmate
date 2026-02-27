@@ -105,7 +105,7 @@ jobs:
           prompt: ${{ steps.prompt.outputs.prompt }}
           claude_args: >-
             --model claude-opus-4-6
-            --allowedTools "Bash(git:*),Bash(npm:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot"
+            --dangerouslySkipPermissions
             --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest"]}}}'
 
       # Runs for everything else — clarify, plan, @claude test, PR review comments
