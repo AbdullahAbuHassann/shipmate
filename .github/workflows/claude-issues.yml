@@ -70,7 +70,9 @@ jobs:
           contains(github.event.comment.body, '@claude test')
         run: |
           npm install -g @playwright/mcp@latest
-          npx playwright install --with-deps chromium
+          # Use @playwright/mcp's own bundled playwright to install browsers,
+          # ensuring the chromium revision matches what the MCP server expects.
+          /usr/local/lib/node_modules/@playwright/mcp/node_modules/.bin/playwright install --with-deps chromium
 
       # Write MCP config so Claude can use Playwright (used by @claude test)
       - name: Write MCP config
