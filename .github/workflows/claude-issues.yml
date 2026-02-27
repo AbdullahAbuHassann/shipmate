@@ -63,12 +63,14 @@ jobs:
       #       bundler-cache: true
       # ─────────────────────────────────────────────────────────────────────
 
-      # Install Playwright browsers only when @claude test is triggered
-      - name: Install Playwright browsers
+      # Install Playwright MCP and browsers only when @claude test is triggered
+      - name: Install Playwright MCP and browsers
         if: |
           github.event_name == 'issue_comment' &&
           contains(github.event.comment.body, '@claude test')
-        run: npx -y playwright install --with-deps chromium
+        run: |
+          npm install -g @playwright/mcp@latest
+          npx playwright install --with-deps chromium
 
       # Write MCP config to a file to avoid JSON quoting issues in shell
       - name: Write MCP config
