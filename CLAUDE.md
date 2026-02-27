@@ -81,6 +81,8 @@ When tagged on a PR comment (e.g. from CodeRabbit or a human reviewer):
 
 Do NOT create a new branch or a new PR. Always push to the existing PR branch.
 
+When pushing a feature branch during implementation, use `git push --force-with-lease origin HEAD` to handle cases where a previous failed run already pushed commits to the same branch.
+
 ## Infrastructure
 
 Both frontend and backend are hosted on Railway in the same project. PR environments are enabled — every PR automatically gets a preview deployment of both services. Non-technical users test via the preview URLs posted on the PR.
