@@ -60,16 +60,16 @@ The plan has already been loaded into your context. Do not re-read the thread.
 The user will include the Railway preview URL in their comment (e.g. `@claude test https://my-app-pr-42.up.railway.app`).
 
 1. Extract the preview URL from the comment
-2. Use Playwright MCP to navigate to the URL and verify the feature works:
-   - Navigate to the relevant page(s)
-   - Interact with the UI as a user would
-   - Take screenshots of key states
-   - Check for errors in the console or UI
+2. Use WebFetch to verify the feature works in the live deployment:
+   - Fetch the main page — confirm it loads and key UI elements are present
+   - Fetch any relevant CSS or JS files to verify changes are deployed
+   - Fetch any API endpoints the feature uses and check responses
+   - Look for signs of errors in the page content
 3. Post a PR comment reporting findings:
-   - What was tested
-   - What worked as expected
+   - What was tested (which URLs were fetched)
+   - What was verified and how
    - Any issues found
-   - Screenshots if relevant
+   - What could not be verified without browser interaction (note this clearly)
 
 ## Pull Request Review Comments
 
