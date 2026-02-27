@@ -138,4 +138,4 @@ jobs:
           claude_args: |
             --model claude-sonnet-4-6
             --mcp-config /tmp/mcp-config.json
-            --allowedTools "Bash(git:*),Bash(npm:*),Bash(gh:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot"
+            --allowedTools "WebFetch,Bash(git:*),Bash(npm:*),Bash(gh:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot,mcp__playwright__browser_console_messages"
