@@ -114,7 +114,7 @@ jobs:
           show_full_output: "true"
           claude_args: >-
             --model claude-sonnet-4-6
-            --allowedTools "Write,Edit,MultiEdit,Read,Glob,Grep,Bash(git:*),Bash(npm:*)"
+            --allowedTools "Write,Edit,MultiEdit,Read,Glob,Grep,Bash(git:*),Bash(npm:*),Bash(gh:*)"
             --mcp-config /tmp/mcp-config.json
 
       # Runs for everything else — clarify, plan, @claude test, PR review comments

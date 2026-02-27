@@ -48,6 +48,8 @@ The plan has already been loaded into your context. Do not re-read the thread.
 1. Run /execute with the plan
 2. Run /code-review and fix any critical issues
 3. Create a PR that references the issue with a rich description that includes:
+   - Use `gh pr create` to open the PR
+4. After creating the PR, post a comment back to the issue using `gh issue comment <issue-number> --body "..."` summarising what was built and linking to the PR
    - Summary of what was built
    - Files changed and why
    - Tests written and their results
