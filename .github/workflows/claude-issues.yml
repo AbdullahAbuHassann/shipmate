@@ -95,6 +95,27 @@ jobs:
           print('Config written:', json.dumps(config))
           "
 
+      - name: Debug Playwright MCP
+        if: |
+          github.event_name == 'issue_comment' &&
+          contains(github.event.comment.body, '@claude test')
+        run: |
+          echo "=== MCP config file ==="
+          cat /tmp/playwright-mcp.json
+
+          echo ""
+          echo "=== npx which playwright-mcp ==="
+          which playwright-mcp 2>&1 || echo "playwright-mcp binary not found in PATH"
+
+          echo ""
+          echo "=== Global npm packages ==="
+          npm list -g --depth=0 2>&1 | grep playwright || echo "no playwright packages found globally"
+
+          echo ""
+          echo "=== Try starting MCP server for 3s ==="
+          echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}' \
+            | timeout 3 npx -y @playwright/mcp@latest 2>&1 || echo "(exited after 3s or error)"
+
       # Only runs for @claude implement — builds a prompt from the plan file only
       - name: Build implement prompt
         id: prompt
