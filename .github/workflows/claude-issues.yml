@@ -110,9 +110,9 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: ${{ steps.prompt.outputs.prompt }}
-          allowed_tools: "Bash,Write,Edit,Read,Glob,Grep,MultiEdit"
           claude_args: >-
             --model claude-opus-4-6
+            --allowedTools "Write,Edit,MultiEdit,Read,Glob,Grep,Bash(git:*),Bash(npm:*)"
             --mcp-config /tmp/mcp-config.json
 
       # Runs for everything else — clarify, plan, @claude test, PR review comments
@@ -122,7 +122,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           trigger_phrase: "@claude"
-          allowed_tools: "Bash(git:*),Bash(npm:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot"
           claude_args: >-
             --model claude-opus-4-6
+            --allowedTools "Bash(git:*),Bash(npm:*),mcp__playwright__browser_navigate,mcp__playwright__browser_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot"
             --mcp-config /tmp/mcp-config.json
