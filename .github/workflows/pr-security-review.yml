@@ -2,7 +2,7 @@ name: Claude Security Review
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review]
+    types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
   security:
