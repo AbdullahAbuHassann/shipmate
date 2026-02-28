@@ -1,6 +1,6 @@
 # shipmate
 
-Turn GitHub issues into pull requests. Your team describes what they want in plain English — Claude handles everything from clarification to code to testing.
+Turn GitHub issues into pull requests. Your team describes what they want in plain English, Claude handles everything from clarification to code to testing.
 
 ---
 
