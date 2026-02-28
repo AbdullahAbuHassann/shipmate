@@ -74,45 +74,6 @@ jobs:
           # ensuring the chromium revision matches what the MCP server expects.
           /usr/local/lib/node_modules/@playwright/mcp/node_modules/.bin/playwright install --with-deps chromium
 
-      # Write Playwright MCP config — always, so the file exists when Run Claude step runs
-      - name: Write Playwright MCP config
-        run: |
-          python3 -c "
-          import json
-          config = {
-            'mcpServers': {
-              'playwright': {
-                'command': 'npx',
-                'args': ['-y', '@playwright/mcp@latest']
-              }
-            }
-          }
-          with open('/tmp/playwright-mcp.json', 'w') as f:
-              json.dump(config, f)
-          print('Config written:', json.dumps(config))
-          "
-
-      - name: Debug Playwright MCP
-        if: |
-          github.event_name == 'issue_comment' &&
-          contains(github.event.comment.body, '@claude test')
-        run: |
-          echo "=== MCP config file ==="
-          cat /tmp/playwright-mcp.json
-
-          echo ""
-          echo "=== npx which playwright-mcp ==="
-          which playwright-mcp 2>&1 || echo "playwright-mcp binary not found in PATH"
-
-          echo ""
-          echo "=== Global npm packages ==="
-          npm list -g --depth=0 2>&1 | grep playwright || echo "no playwright packages found globally"
-
-          echo ""
-          echo "=== Try starting MCP server for 3s ==="
-          echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}' \
-            | timeout 3 npx -y @playwright/mcp@latest 2>&1 || echo "(exited after 3s or error)"
-
       # Only runs for @claude implement — builds a prompt from the plan file only
       - name: Build implement prompt
         id: prompt
@@ -148,7 +109,7 @@ jobs:
           prompt: ${{ steps.prompt.outputs.prompt }}
           track_progress: "true"
           show_full_output: "true"
-          claude_args: >-
+          claude_args: |
             --model claude-sonnet-4-6
             --allowedTools "Write,Edit,MultiEdit,Read,Glob,Grep,Bash(git:*),Bash(npm:*),Bash(gh:*)"
 
@@ -161,7 +122,7 @@ jobs:
           trigger_phrase: "@claude"
           track_progress: "true"
           show_full_output: "true"
-          claude_args: >-
+          claude_args: |
             --model claude-sonnet-4-6
-            --mcp-config /tmp/playwright-mcp.json
+            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp@latest"]}}}'
             --allowedTools "WebFetch,Bash(git:*),Bash(npm:*),Bash(gh:*),mcp__playwright__browser_navigate,mcp__playwright__browser_take_screenshot,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_fill,mcp__playwright__browser_snapshot,mcp__playwright__browser_console_messages,mcp__playwright__browser_wait_for,mcp__playwright__browser_handle_dialog"
