@@ -27,7 +27,7 @@ You need a Claude Pro or Team account at [claude.ai](https://claude.ai).
 Open a terminal and run:
 
 ```bash
-claude auth token
+claude setup-token
 ```
 
 Copy the token it prints.
