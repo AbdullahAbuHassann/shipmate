@@ -1,0 +1,34 @@
+name: Feature Request
+description: Describe something you'd like added or changed
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: "@claude"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What are you trying to do, or what's frustrating you right now?
+      placeholder: "e.g. I can't tell which tasks are urgent vs. not urgent"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+      description: Describe the change in plain English. No technical detail needed.
+      placeholder: "e.g. I'd like to be able to mark a task as high priority so it shows at the top"
+    validations:
+      required: true
+
+  - type: textarea
+    id: success
+    attributes:
+      label: How will you know it's working?
+      description: What should you be able to do once this is built?
+      placeholder: "e.g. I can click a flag icon on any task and it moves to the top of the list"
+    validations:
+      required: false

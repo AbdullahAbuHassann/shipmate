@@ -1,66 +1,67 @@
-# Setup Guide
+# Setup
 
-Follow these steps to get shipmate working in your repository.
-
----
-
-## Step 1: Install the Claude GitHub App
-
-1. Go to [github.com/apps/claude](https://github.com/apps/claude)
-2. Click **"Install"**
-3. Select the repository you want to use it on
-4. Confirm the permissions
-
-This is required for the workflow to post comments and open PRs on Claude's behalf.
+Follow these steps in order. Takes about 10 minutes.
 
 ---
 
-## Step 2: Create your repository from this template
+## 1. Install the Claude GitHub App
 
-1. Click **"Use this template"** at the top of this repository on GitHub
-2. Choose **"Create a new repository"**
-3. Name it, set visibility, and click **"Create repository"**
+Go to [github.com/apps/claude](https://github.com/apps/claude), click **Install**, and select your repository.
 
----
-
-## Step 3: Get your Claude Code OAuth token
-
-1. Go to [claude.ai](https://claude.ai) and sign in (requires Claude Pro or Team)
-2. Open Claude Code in your terminal and run:
-   ```bash
-   claude auth token
-   ```
-3. Copy the token that is printed
+This is what allows Claude to post comments and open pull requests on your repo.
 
 ---
 
-## Step 4: Add the secret to GitHub
+## 2. Create your repository from this template
 
-1. In your new repository, go to **Settings > Secrets and variables > Actions**
-2. Click **"New repository secret"**
-3. Name: `CLAUDE_CODE_OAUTH_TOKEN`
-4. Value: paste your token
-5. Click **"Add secret"**
+On this repository's GitHub page, click **"Use this template"** → **"Create a new repository"**.
+
+Give it a name, choose public or private, and create it. From here on, work in your new repo.
 
 ---
 
-## Step 5: Customise `.claude/CLAUDE.md` for your stack
+## 3. Get your Claude Code OAuth token
 
-This file teaches Claude your project's conventions. Fill in:
+You need a Claude Pro or Team account at [claude.ai](https://claude.ai).
 
-- **Tech Stack** — your languages, frameworks, and key libraries
-- **Project Structure** — directory layout (a tree diagram is ideal)
-- **Commands** — your install, dev, test, and lint commands
-- **Architecture Patterns** — patterns Claude must follow
-- **Testing Standards** — test framework, file locations, patterns
+Open a terminal and run:
 
-The more specific you are, the better Claude's output will be.
+```bash
+claude auth token
+```
+
+Copy the token it prints.
 
 ---
 
-## Step 6: Add your dependency setup to the workflow
+## 4. Add the token to GitHub
 
-Open `.github/workflows/claude-issues.yml` and find the comment block marked `TODO`. Replace it with your actual setup steps.
+In your new repository, go to **Settings → Secrets and variables → Actions → New repository secret**.
+
+- Name: `CLAUDE_CODE_OAUTH_TOKEN`
+- Value: paste your token
+
+---
+
+## 5. Tell Claude about your project
+
+Open `.claude/CLAUDE.md`. This is where Claude learns your stack, folder structure, and conventions. Replace the placeholder content with your own:
+
+- **Tech Stack** — your languages and frameworks
+- **Project Structure** — a short directory tree
+- **Commands** — how to install, run, test, and lint your project
+- **Architecture Patterns** — anything Claude must know before touching the code
+- **Code Style** — naming conventions, formatting rules
+
+The more specific you are here, the better Claude's output will be. If you're starting fresh and have nothing to fill in yet, leave the example content in place — it matches the todo app that's already in the repo.
+
+---
+
+## 6. Add your dependency install commands
+
+Open `.github/workflows/claude-issues.yml`. Find the comment block that starts with `TODO: Add your project's dependency setup here`.
+
+Replace the comment with your actual setup steps. For example:
 
 **Node.js:**
 ```yaml
@@ -78,53 +79,46 @@ Open `.github/workflows/claude-issues.yml` and find the comment block marked `TO
 - run: pip install uv && uv sync
 ```
 
-Do the same for `.github/workflows/ci.yml`.
+The example todo app uses Node.js, so if you're keeping it, add the Node.js block above.
+
+Do the same in `.github/workflows/ci.yml`.
 
 ---
 
-## Step 7: Set up Railway
+## 7. Set up Railway for PR previews
 
-Railway provides automatic preview deployments for every PR.
+Railway deploys your app automatically on every PR and posts a preview URL as a comment. This is what you pass to `@claude test`.
 
+**Create a project:**
 1. Go to [railway.app](https://railway.app) and sign in
-2. Click **"New Project"** → **"Deploy from GitHub repo"** → select your repo
-3. Railway detects your stack and deploys automatically
-4. Go to your service **Settings** → enable **"PR Deployments"**
+2. Click **New Project** → **Deploy from GitHub repo**
+3. Select your repository
+4. Railway detects Node.js (or your stack) and deploys automatically
 
-Every PR now gets its own preview URL. Railway posts it as a comment on the PR automatically. Copy that URL and use it with `@claude test <url>`.
+**Enable PR deployments:**
+1. Click on your service inside the project
+2. Go to **Settings**
+3. Find **PR Deployments** and turn it on
 
----
-
-## Step 8: Test it
-
-Open a new issue, write what you want in plain English, and include `@claude` anywhere in the body. Claude will respond within a minute or two.
-
-If it doesn't respond:
-- Check the **Actions** tab to see if the workflow ran
-- Verify the `CLAUDE_CODE_OAUTH_TOKEN` secret is set correctly
-- Confirm the Claude GitHub App is installed on the repo (Step 1)
+That's it. Every time a PR opens, Railway builds and deploys it. The URL appears as a comment on the PR within a minute or two.
 
 ---
 
-## Troubleshooting
+## 8. Test the whole flow
 
-### Claude doesn't respond to my issue
+Open a new issue in your repo. Use the **Feature Request** form and describe something small you want added to the to-do app — for example, "Add a way to filter todos by status."
 
-- Check the Actions tab for workflow run errors
-- Verify the token is correct and not expired
-- Confirm the Claude GitHub App is installed
+Claude will respond with questions. Answer them. Then follow the flow in [README.md](README.md).
 
-### Claude says "No plan file found"
+**If Claude doesn't respond:**
+- Check the **Actions** tab to see if the workflow ran and whether it failed
+- Verify the `CLAUDE_CODE_OAUTH_TOKEN` secret is set (Settings → Secrets)
+- Confirm the Claude GitHub App is installed on this repo (Step 1)
 
-- Run `@claude plan` before `@claude implement`
-- Check that the plan file was pushed to main (look in `.agents/plans/`)
+**If Claude says "No plan file found":**
+- You need to run `@claude plan` before `@claude implement`
+- Check that a plan file exists in `.agents/plans/` after planning
 
-### The workflow runs but Claude posts nothing
-
-- Check the workflow logs in Actions for the "Run Claude" step
-- Try re-running the failed workflow job
-
-### `@claude test` doesn't browse the preview URL
-
-- Confirm the Playwright browser install step ran (only runs when comment contains `@claude test`)
-- Verify the Railway URL is publicly accessible
+**If `@claude test` doesn't browse the URL:**
+- The comment must contain the exact text `@claude test` followed by the URL
+- The Railway URL must be publicly accessible
