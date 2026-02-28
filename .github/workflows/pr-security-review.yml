@@ -1,0 +1,78 @@
+name: Claude Security Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+jobs:
+  security:
+    # Skip draft PRs and bot-authored PRs
+    if: |
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: "true"
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Perform a security-focused review of this pull request.
+
+            ## Steps
+
+            1. Get the PR diff and changed files:
+               ```
+               gh pr diff ${{ github.event.pull_request.number }}
+               gh pr view ${{ github.event.pull_request.number }}
+               ```
+
+            2. Read each changed file in its entirety to understand full context.
+
+            ## OWASP Top 10
+
+            - SQL Injection vulnerabilities
+            - Cross-Site Scripting (XSS)
+            - Broken Authentication
+            - Sensitive Data Exposure
+            - XML External Entities (XXE)
+            - Broken Access Control
+            - Security Misconfiguration
+            - Cross-Site Request Forgery (CSRF)
+            - Using Components with Known Vulnerabilities
+            - Insufficient Logging & Monitoring
+
+            ## Additional Security Checks
+
+            - Hardcoded secrets, credentials, or API keys
+            - Insecure cryptographic practices
+            - Unsafe deserialization
+            - Server-Side Request Forgery (SSRF)
+            - Race conditions or TOCTOU issues
+            - Dependency vulnerabilities introduced by this PR
+
+            ## Output
+
+            Rate each finding as: CRITICAL, HIGH, MEDIUM, LOW, or NONE.
+
+            - Use `mcp__github_inline_comment__create_inline_comment` for line-specific findings (file path, line number, severity, explanation, recommendation).
+            - Use `gh pr comment` for a top-level summary listing all findings by severity.
+            - If no security issues are found, post a short "Security review passed." comment.
+            - Only post GitHub comments — do not output findings as messages.
+
+          claude_args: |
+            --model claude-sonnet-4-6
+            --allowedTools "Read,Glob,Grep,Bash(git:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),mcp__github_inline_comment__create_inline_comment"
