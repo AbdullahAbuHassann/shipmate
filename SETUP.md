@@ -57,7 +57,40 @@ The more specific you are here, the better Claude's output will be. If you're st
 
 ---
 
-## 6. Add your dependency install commands
+## 6. Set up spec-workflow MCP and write your specs
+
+Specs are the source of truth for every feature. Non-technical users open issues to request enhancements or report bugs — Claude reads the relevant spec before planning any work to make sure everything stays within what was designed.
+
+**Install spec-workflow MCP**
+
+It's already configured in `.mcp.json`. Open a terminal in your project and run:
+
+```bash
+npx -y @pimzino/spec-workflow-mcp@latest --dashboard
+```
+
+This starts a local dashboard at `http://localhost:5000`. You can use it to create and manage specs visually, or just write them as markdown files directly in `.spec-workflow/specs/`.
+
+**Write a spec for each feature**
+
+Two starter specs are already in `.spec-workflow/specs/`:
+- `todo-feature.md` — what the todo functionality does and doesn't do
+- `ui-and-design.md` — all visual decisions: colours, layout, components, interactions
+
+Replace these with specs for your own app. A spec answers:
+- What does this feature do?
+- What does it explicitly NOT do?
+- What are the acceptance criteria?
+
+**Commit your specs to the repo.** Claude in GitHub Actions reads them from the repo during planning.
+
+**The rule:** every feature has a spec. Non-technical users request enhancements on existing specced features. If a request doesn't fit any spec, Claude will say so and a developer writes or updates the spec first.
+
+For minor visual changes (button labels, colours, wording), they fall under `ui-and-design.md`. You don't need a separate spec per button.
+
+---
+
+## 7. Add your dependency install commands (workflow)
 
 Open `.github/workflows/claude-issues.yml`. Find the comment block that starts with `TODO: Add your project's dependency setup here`.
 
@@ -85,7 +118,7 @@ Do the same in `.github/workflows/ci.yml`.
 
 ---
 
-## 7. Set up Railway for PR previews
+## 8. Set up Railway for PR previews
 
 Railway deploys your app automatically on every PR and posts a preview URL as a comment. This is what you pass to `@claude test`.
 
@@ -104,7 +137,7 @@ That's it. Every time a PR opens, Railway builds and deploys it. The URL appears
 
 ---
 
-## 8. Test the whole flow
+## 9. Test the whole flow
 
 Open a new issue in your repo. Use the **Feature Request** form and describe something small you want added to the to-do app — for example, "Add a way to filter todos by status."
 

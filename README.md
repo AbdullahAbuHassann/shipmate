@@ -18,7 +18,7 @@ Reply in the issue thread. Plain English. Claude is trying to fill in details th
 
 ### 3. `@claude plan`
 
-Comment `@claude plan` on the issue. Claude will:
+Comment `@claude plan` on the issue. Claude will read the relevant spec in `.spec-workflow/specs/` first, then:
 - Read the codebase
 - Write an implementation plan
 - Post a plain-English summary of what it's going to build and which files it'll touch
@@ -79,6 +79,10 @@ About 10 minutes. Full instructions in [SETUP.md](SETUP.md).
 ├── .claude/
 │   ├── CLAUDE.md                    # Your project conventions — customise this
 │   └── commands/                    # Slash commands used internally by Claude
+├── .spec-workflow/
+│   └── specs/                       # One spec per feature — the source of truth
+│       ├── todo-feature.md          # What the todo feature does (replace with yours)
+│       └── ui-and-design.md         # Visual decisions: colours, layout, components
 ├── .agents/
 │   └── plans/                       # Plan files are saved and committed here
 ├── public/                          # Example app (plain HTML/CSS/JS todo list)

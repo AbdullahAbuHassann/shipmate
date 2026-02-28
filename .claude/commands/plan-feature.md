@@ -16,6 +16,22 @@ Transform a feature request into a **comprehensive implementation plan** through
 
 ## Planning Process
 
+### Phase 0: Read the Spec
+
+Find the relevant spec in `.spec-workflow/specs/` and read it in full before doing anything else.
+
+The spec is the source of truth for what this feature does. Every plan must stay within its boundaries.
+
+**If no spec covers this request:**
+- Do NOT proceed with planning
+- Post a comment: "There's no spec covering this request. A developer needs to write one first before I can plan this work."
+- Suggest which spec might be the right home (e.g. `ui-and-design.md` for visual changes) or that a new spec is needed
+
+**If the request goes beyond what the spec defines:**
+- Plan only the parts that are within the spec
+- Flag the out-of-scope parts explicitly in your summary
+- Tell the user a developer needs to update the spec before those parts can be built
+
 ### Phase 1: Feature Understanding
 
 **Deep Feature Analysis:**

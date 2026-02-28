@@ -25,9 +25,10 @@ Answer helpfully. If you have enough information, summarise what you know and te
 ## Planning (user says "@claude plan")
 
 1. Run /prime to load project context
-2. Run /plan-feature with a full summary of the issue and all follow-up discussion
-3. Save the plan as `.agents/plans/issue-{number}.md` (use the actual issue number)
-4. Push the plan file to main so the implement session can find it:
+2. Find and read the relevant spec in `.spec-workflow/specs/` — this is the source of truth for what the feature should do. If no spec covers the request, do NOT plan: tell the user a developer needs to write a spec first
+3. Run /plan-feature with a full summary of the issue and all follow-up discussion
+4. Save the plan as `.agents/plans/issue-{number}.md` (use the actual issue number)
+5. Push the plan file to main so the implement session can find it:
    ```bash
    git fetch origin main
    git checkout main
@@ -36,8 +37,8 @@ Answer helpfully. If you have enough information, summarise what you know and te
    git commit -m "chore: save plan for issue #{number} [skip ci]"
    git push origin main
    ```
-5. Post a plain-English comment summarising what will be built, the key decisions made, and which files will change
-6. Tell the user to reply "@claude implement" when they are happy with the plan
+6. Post a plain-English comment summarising what will be built, the key decisions made, and which files will change
+7. Tell the user to reply "@claude implement" when they are happy with the plan
 
 Do NOT write any code.
 
