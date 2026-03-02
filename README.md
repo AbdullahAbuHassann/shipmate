@@ -8,7 +8,7 @@ Turn GitHub issues into pull requests. Your team describes what they want in pla
 
 ### 1. Open an issue
 
-Use the **Feature Request** or **Bug Report** form. Fill it in plain English. `@claude` is automatically included — no need to type it.
+Fill it in plain English (label it either as an enhancement or bug fix, non technical users should not be creating new features). `@claude` is automatically included. No need to type it.
 
 Claude responds within about a minute with clarifying questions.
 
